@@ -458,26 +458,62 @@ body {
 
 .mood-options {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
     margin-bottom: 20px;
 }
 
 .mood-btn {
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
     background: var(--bg-color);
     color: var(--text-color);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 18px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
 }
 
+.mood-btn[data-mood="happy"] {
+    border-color: #4CAF50;
+}
+
+.mood-btn[data-mood="excited"] {
+    border-color: #FF9800;
+}
+
+.mood-btn[data-mood="calm"] {
+    border-color: #2196F3;
+}
+
+.mood-btn[data-mood="tired"] {
+    border-color: #FFC107;
+}
+
+.mood-btn[data-mood="sad"] {
+    border-color: #9C27B0;
+}
+
+.mood-btn[data-mood="angry"] {
+    border-color: #F44336;
+}
+
+.mood-btn[data-mood="anxious"] {
+    border-color: #FF5722;
+}
+
+.mood-btn[data-mood="confused"] {
+    border-color: #607D8B;
+}
+
 .mood-btn:hover {
-    background: var(--accent-color);
-    color: white;
-    border-color: var(--accent-color);
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* 心情统计 */
@@ -524,6 +560,10 @@ body {
     color: #4CAF50;
 }
 
+.mood-excited {
+    color: #FF9800;
+}
+
 .mood-calm {
     color: #2196F3;
 }
@@ -534,6 +574,18 @@ body {
 
 .mood-sad {
     color: #9C27B0;
+}
+
+.mood-angry {
+    color: #F44336;
+}
+
+.mood-anxious {
+    color: #FF5722;
+}
+
+.mood-confused {
+    color: #607D8B;
 }
 
 /* 悬浮按钮 */

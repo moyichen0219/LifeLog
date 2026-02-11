@@ -76,16 +76,24 @@ function performQuickSearch() {
 function addMoodRecord(mood) {
     const moodEmojis = {
         happy: '😊',
+        excited: '🤩',
         calm: '😌',
         tired: '😴',
-        sad: '😢'
+        sad: '😢',
+        angry: '😠',
+        anxious: '😰',
+        confused: '😕'
     };
     
     const moodNames = {
         happy: '开心',
+        excited: '兴奋',
         calm: '平静',
         tired: '疲惫',
-        sad: '难过'
+        sad: '难过',
+        angry: '生气',
+        anxious: '焦虑',
+        confused: '困惑'
     };
     
     const record = {
@@ -112,9 +120,13 @@ function updateMoodStats() {
     // 计算平均心情值
     const moodValues = {
         happy: 4,
+        excited: 4,
         calm: 3,
         tired: 2,
-        sad: 1
+        sad: 1,
+        angry: 1,
+        anxious: 1,
+        confused: 2
     };
     
     if (moodHistory.length === 0) {
@@ -172,9 +184,13 @@ function updateMoodRing(value, mood) {
     if (moodEmoji) {
         const moodEmojis = {
             happy: '😊',
+            excited: '🤩',
             calm: '😌',
             tired: '😴',
-            sad: '😢'
+            sad: '😢',
+            angry: '😠',
+            anxious: '😰',
+            confused: '😕'
         };
         moodEmoji.textContent = moodEmojis[mood] || '😐';
     }
