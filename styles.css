@@ -451,9 +451,66 @@ body {
     box-shadow: var(--shadow);
 }
 
-.mood-tracker h3 {
+.mood-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 15px;
+}
+
+.mood-header h3 {
+    margin: 0;
     font-size: 16px;
+    white-space: nowrap;
+}
+
+.mood-indicator {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.mood-score {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-width: 40px;
+    text-align: right;
+}
+
+.mood-indicator.happy {
+    background: #4CAF50;
+}
+
+.mood-indicator.excited {
+    background: #FF9800;
+}
+
+.mood-indicator.calm {
+    background: #2196F3;
+}
+
+.mood-indicator.tired {
+    background: #FFC107;
+}
+
+.mood-indicator.sad {
+    background: #9C27B0;
+}
+
+.mood-indicator.angry {
+    background: #F44336;
+}
+
+.mood-indicator.anxious {
+    background: #FF5722;
+}
+
+.mood-indicator.confused {
+    background: #607D8B;
 }
 
 .mood-options {
@@ -514,45 +571,6 @@ body {
 .mood-btn:hover {
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* 心情统计 */
-.mood-stats {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.mood-ring-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.mood-ring {
-    position: relative;
-    width: 80px;
-    height: 80px;
-}
-
-.mood-ring svg {
-    transform: rotate(-90deg);
-}
-
-.mood-emoji {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    z-index: 1;
-}
-
-.mood-average {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text-color);
 }
 
 /* 心情颜色 */

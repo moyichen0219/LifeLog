@@ -117,41 +117,48 @@ function addMoodRecord(mood) {
 
 // 更新心情统计
 function updateMoodStats() {
-    // 计算平均心情值
+    // 计算心情值
     const moodValues = {
-        happy: 4,
-        excited: 4,
-        calm: 3,
-        tired: 2,
-        sad: 1,
-        angry: 1,
-        anxious: 1,
-        confused: 2
+        happy: 5,
+        excited: 5,
+        calm: 4,
+        tired: 3,
+        confused: 3,
+        sad: 2,
+        anxious: 2,
+        angry: 1
     };
     
     if (moodHistory.length === 0) {
         // 没有记录时的默认值
-        updateMoodRing(3, 'calm');
+        updateMoodIndicator(0, 'calm');
         return;
     }
     
+    // 计算平均心情值
     const totalValue = moodHistory.reduce((sum, record) => {
         return sum + (moodValues[record.mood] || 3);
     }, 0);
     
     const averageValue = totalValue / moodHistory.length;
     
-    // 确定当前主要心情
+    // 确定当前最多选择的心情
     let dominantMood = 'calm';
     const moodCounts = {
         happy: 0,
+        excited: 0,
         calm: 0,
         tired: 0,
-        sad: 0
+        confused: 0,
+        sad: 0,
+        anxious: 0,
+        angry: 0
     };
     
     moodHistory.forEach(record => {
-        moodCounts[record.mood]++;
+        if (moodCounts.hasOwnProperty(record.mood)) {
+            moodCounts[record.mood]++;
+        }
     });
     
     let maxCount = 0;
@@ -162,44 +169,24 @@ function updateMoodStats() {
         }
     });
     
-    // 更新环形进度条
-    updateMoodRing(averageValue, dominantMood);
+    // 更新心情指示器
+    updateMoodIndicator(averageValue, dominantMood);
 }
 
-// 更新心情环形进度条
-function updateMoodRing(value, mood) {
-    // 计算进度条的长度
-    const circumference = 2 * Math.PI * 35;
-    const progress = ((value - 1) / 3) * circumference; // 值范围从1到4
+// 更新心情指示器
+function updateMoodIndicator(value, mood) {
+    const moodIndicator = document.getElementById('mood-indicator');
+    const moodScore = document.getElementById('mood-score');
     
-    const progressRing = document.getElementById('mood-progress-ring');
-    const moodEmoji = document.getElementById('mood-emoji');
-    const moodAverage = document.getElementById('mood-average');
-    
-    if (progressRing) {
-        progressRing.style.strokeDasharray = `${circumference}`;
-        progressRing.style.strokeDashoffset = `${circumference - progress}`;
+    if (moodIndicator) {
+        // 移除所有心情颜色类
+        moodIndicator.className = 'mood-indicator';
+        // 添加当前心情颜色类
+        moodIndicator.classList.add(mood);
     }
     
-    if (moodEmoji) {
-        const moodEmojis = {
-            happy: '😊',
-            excited: '🤩',
-            calm: '😌',
-            tired: '😴',
-            sad: '😢',
-            angry: '😠',
-            anxious: '😰',
-            confused: '😕'
-        };
-        moodEmoji.textContent = moodEmojis[mood] || '😐';
-    }
-    
-    if (moodAverage) {
-        moodAverage.textContent = value.toFixed(1);
-        // 添加心情颜色类
-        moodAverage.className = 'mood-average';
-        moodAverage.classList.add(`mood-${mood}`);
+    if (moodScore) {
+        moodScore.textContent = value.toFixed(1);
     }
 }
 

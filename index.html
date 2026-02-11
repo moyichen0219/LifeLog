@@ -74,7 +74,11 @@
             
             <!-- 心情记录 -->
             <section class="mood-tracker">
-                <h3>心情记录</h3>
+                <div class="mood-header">
+                    <h3>心情记录</h3>
+                    <div class="mood-indicator" id="mood-indicator"></div>
+                    <div class="mood-score" id="mood-score">0.0</div>
+                </div>
                 <div class="mood-options">
                     <button class="mood-btn" data-mood="happy">😊</button>
                     <button class="mood-btn" data-mood="excited">🤩</button>
@@ -84,18 +88,6 @@
                     <button class="mood-btn" data-mood="angry">😠</button>
                     <button class="mood-btn" data-mood="anxious">😰</button>
                     <button class="mood-btn" data-mood="confused">😕</button>
-                </div>
-                <div class="mood-stats">
-                    <div class="mood-ring-container">
-                        <div class="mood-ring">
-                            <svg width="80" height="80" viewBox="0 0 80 80">
-                                <circle cx="40" cy="40" r="35" fill="none" stroke="var(--border-color)" stroke-width="8"/>
-                                <circle cx="40" cy="40" r="35" fill="none" stroke="var(--accent-color)" stroke-width="8" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="110" id="mood-progress-ring"/>
-                            </svg>
-                            <div class="mood-emoji" id="mood-emoji">😊</div>
-                        </div>
-                        <div class="mood-average" id="mood-average">3.0</div>
-                    </div>
                 </div>
             </section>
         </div>
