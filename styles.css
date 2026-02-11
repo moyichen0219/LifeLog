@@ -1,0 +1,770 @@
+:root {
+    /* 浅色模式变量 */
+    --bg-color: #f5f5f5;
+    --text-color: #333;
+    --card-bg: #fff;
+    --border-color: #e0e0e0;
+    --accent-color: #4CAF50;
+    --urgent-color: #f44336;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+[data-theme="dark"] {
+    /* 深色模式变量 */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --border-color: #333;
+    --accent-color: #4CAF50;
+    --urgent-color: #f44336;
+    --shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    min-height: 100vh;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Header */
+.header {
+    background: var(--card-bg);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.greeting {
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.quick-search {
+    flex: 1;
+    max-width: 600px;
+}
+
+.quick-search input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.quick-search input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.clock {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+}
+
+/* 主内容区 */
+.main-content {
+    display: flex;
+    gap: 20px;
+    padding: 0 20px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 侧边栏 */
+.sidebar {
+    width: 250px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    height: fit-content;
+}
+
+.sidebar h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.quick-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.quick-link-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+}
+
+.quick-link-item a {
+    color: var(--text-color);
+    text-decoration: none;
+    flex: 1;
+}
+
+.quick-link-item .link-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.quick-link-item button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.quick-link-item button:hover {
+    background: var(--border-color);
+}
+
+.add-link-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.add-link-btn:hover {
+    background: #45a049;
+}
+
+/* 主网格区域 */
+.grid-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto;
+    gap: 20px;
+    grid-template-areas:
+        "weather todo pomodoro"
+        "mood todo pomodoro";
+}
+
+/* 天气仪表盘 */
+.weather-dashboard {
+    grid-area: weather;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.weather-dashboard h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.weather-current {
+    margin-bottom: 20px;
+}
+
+.weather-location {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.weather-temp {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.weather-humidity {
+    font-size: 14px;
+    color: #666;
+}
+
+.weather-forecast {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: var(--bg-color);
+    border-radius: 4px;
+}
+
+.forecast-time {
+    font-size: 12px;
+}
+
+.forecast-temp {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* 待办清单 */
+.todo-list {
+    grid-area: todo;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.todo-list h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.todo-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.todo-controls input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.todo-controls select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+.todo-controls button {
+    padding: 10px 20px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.todo-controls button:hover {
+    background: #45a049;
+}
+
+.todo-items {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-color);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    cursor: grab;
+}
+
+.todo-item:hover {
+    box-shadow: var(--shadow);
+}
+
+.todo-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.todo-item.urgent {
+    border-left: 4px solid var(--urgent-color);
+}
+
+.todo-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.todo-item .todo-text {
+    flex: 1;
+    font-size: 14px;
+}
+
+.todo-item .todo-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.todo-item button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.todo-item button:hover {
+    background: var(--border-color);
+}
+
+/* 专注模式 */
+.pomodoro {
+    grid-area: pomodoro;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.pomodoro h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.pomodoro-timer {
+    font-size: 48px;
+    font-weight: 600;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.pomodoro-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.pomodoro-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+#start-pomodoro {
+    background: var(--accent-color);
+    color: white;
+}
+
+#start-pomodoro:hover {
+    background: #45a049;
+}
+
+#pause-pomodoro {
+    background: #ff9800;
+    color: white;
+}
+
+#pause-pomodoro:hover {
+    background: #f57c00;
+}
+
+#reset-pomodoro {
+    background: #f44336;
+    color: white;
+}
+
+#reset-pomodoro:hover {
+    background: #d32f2f;
+}
+
+
+
+/* 心情记录 */
+.mood-tracker {
+    grid-area: mood;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.mood-tracker h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.mood-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mood-btn {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.mood-btn:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+/* 心情统计 */
+.mood-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mood-ring-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.mood-ring {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.mood-ring svg {
+    transform: rotate(-90deg);
+}
+
+.mood-emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    z-index: 1;
+}
+
+.mood-average {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* 心情颜色 */
+.mood-happy {
+    color: #4CAF50;
+}
+
+.mood-calm {
+    color: #2196F3;
+}
+
+.mood-tired {
+    color: #FFC107;
+}
+
+.mood-sad {
+    color: #9C27B0;
+}
+
+/* 悬浮按钮 */
+.settings-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.settings-btn:hover {
+    transform: scale(1.1);
+    background: #45a049;
+}
+
+/* 设置面板 */
+.settings-panel {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    width: 300px;
+    z-index: 999;
+    display: none;
+}
+
+.settings-panel.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+.settings-panel h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.setting-item button {
+    padding: 8px 16px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.setting-item button:hover {
+    background: #45a049;
+}
+
+#close-settings-btn {
+    width: 100%;
+    padding: 10px;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+#close-settings-btn:hover {
+    background: #555;
+}
+
+/* 模态框 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    display: none;
+}
+
+.modal.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    width: 400px;
+    max-width: 90%;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+#save-link-btn {
+    background: var(--accent-color);
+    color: white;
+}
+
+#save-link-btn:hover {
+    background: #45a049;
+}
+
+#cancel-link-btn {
+    background: #666;
+    color: white;
+}
+
+#cancel-link-btn:hover {
+    background: #555;
+}
+
+/* 动画 */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .grid-container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "weather todo"
+            "pomodoro todo"
+            "search search";
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        order: -1;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "weather"
+            "todo"
+            "pomodoro"
+            "search";
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人数字指挥中心</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 主题切换 -->
+    <button id="theme-toggle" class="theme-toggle">🌙</button>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="greeting" id="greeting">早安，欢迎回来</div>
+        <div class="quick-search">
+            <input type="text" id="quick-search-input" placeholder="搜索... (g: 谷歌, b: 百度)">
+        </div>
+        <div class="clock" id="clock">00:00:00</div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <h3>常用链接</h3>
+            <div class="quick-links" id="quick-links">
+                <!-- 动态生成的链接 -->
+            </div>
+            <button id="add-link-btn" class="add-link-btn">+ 添加链接</button>
+        </aside>
+        
+        <!-- 主网格区域 -->
+        <div class="grid-container">
+            <!-- 天气仪表盘 -->
+            <section class="weather-dashboard" id="weather-dashboard">
+                <h3>天气信息</h3>
+                <div class="weather-current">
+                    <div class="weather-location" id="weather-location">获取位置中...</div>
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-humidity" id="weather-humidity">湿度: --%</div>
+                </div>
+                <div class="weather-forecast" id="weather-forecast">
+                    <!-- 24小时预报 -->
+                </div>
+            </section>
+            
+            <!-- 待办清单 -->
+            <section class="todo-list" id="todo-list">
+                <h3>待办清单</h3>
+                <div class="todo-controls">
+                    <input type="text" id="todo-input" placeholder="输入新任务...">
+                    <select id="todo-priority">
+                        <option value="normal">普通</option>
+                        <option value="urgent">紧急</option>
+                    </select>
+                    <button id="add-todo-btn">添加</button>
+                </div>
+                <div class="todo-items" id="todo-items">
+                    <!-- 动态生成的待办项 -->
+                </div>
+            </section>
+            
+            <!-- 专注模式 -->
+            <section class="pomodoro" id="pomodoro">
+                <h3>专注模式</h3>
+                <div class="pomodoro-timer" id="pomodoro-timer">25:00</div>
+                <div class="pomodoro-controls">
+                    <button id="start-pomodoro">开始</button>
+                    <button id="pause-pomodoro">暂停</button>
+                    <button id="reset-pomodoro">重置</button>
+                </div>
+            </section>
+            
+            <!-- 心情记录 -->
+            <section class="mood-tracker">
+                <h3>心情记录</h3>
+                <div class="mood-options">
+                    <button class="mood-btn" data-mood="happy">😊 开心</button>
+                    <button class="mood-btn" data-mood="calm">😌 平静</button>
+                    <button class="mood-btn" data-mood="tired">😴 疲惫</button>
+                    <button class="mood-btn" data-mood="sad">😢 难过</button>
+                </div>
+                <div class="mood-stats">
+                    <div class="mood-ring-container">
+                        <div class="mood-ring">
+                            <svg width="80" height="80" viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="35" fill="none" stroke="var(--border-color)" stroke-width="8"/>
+                                <circle cx="40" cy="40" r="35" fill="none" stroke="var(--accent-color)" stroke-width="8" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="110" id="mood-progress-ring"/>
+                            </svg>
+                            <div class="mood-emoji" id="mood-emoji">😊</div>
+                        </div>
+                        <div class="mood-average" id="mood-average">3.0</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- 悬浮按钮 -->
+    <button id="settings-btn" class="settings-btn">⚙️</button>
+    
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settings-panel">
+        <h3>设置</h3>
+        <div class="setting-item">
+            <label>背景图片</label>
+            <button id="change-bg-btn">更换背景</button>
+        </div>
+        <button id="close-settings-btn">关闭</button>
+    </div>
+    
+    <!-- 链接编辑模态框 -->
+    <div class="modal" id="link-modal">
+        <div class="modal-content">
+            <h3>编辑链接</h3>
+            <input type="text" id="link-name" placeholder="链接名称">
+            <input type="url" id="link-url" placeholder="链接URL">
+            <button id="save-link-btn">保存</button>
+            <button id="cancel-link-btn">取消</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
