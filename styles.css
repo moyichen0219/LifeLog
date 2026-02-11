@@ -36,9 +36,6 @@ body {
 
 /* 主题切换按钮 */
 .theme-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: 50%;
@@ -92,6 +89,12 @@ body {
 .quick-search input:focus {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+}
+
+.clock-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .clock {
