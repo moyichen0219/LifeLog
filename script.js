@@ -447,6 +447,54 @@ function initDragAndDrop() {
     });
 }
 
+// 快速链接拖拽排序
+function initLinkDragAndDrop() {
+    const linkItems = document.querySelectorAll('.quick-link-item');
+    let draggedItem = null;
+    
+    linkItems.forEach(item => {
+        item.addEventListener('dragstart', function() {
+            draggedItem = this;
+            setTimeout(() => this.classList.add('dragging'), 0);
+        });
+        
+        item.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+            draggedItem = null;
+        });
+        
+        item.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        
+        item.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            if (this !== draggedItem) {
+                this.style.opacity = '0.5';
+            }
+        });
+        
+        item.addEventListener('dragleave', function() {
+            this.style.opacity = '1';
+        });
+        
+        item.addEventListener('drop', function() {
+            this.style.opacity = '1';
+            if (this !== draggedItem) {
+                const draggedIndex = parseInt(draggedItem.dataset.index);
+                const dropIndex = parseInt(this.dataset.index);
+                
+                // 重新排序
+                const [movedLink] = quickLinks.splice(draggedIndex, 1);
+                quickLinks.splice(dropIndex, 0, movedLink);
+                
+                localStorage.setItem('quickLinks', JSON.stringify(quickLinks));
+                loadQuickLinks();
+            }
+        });
+    });
+}
+
 // 快速链接
 function loadQuickLinks() {
     elements.quickLinks.innerHTML = '';
@@ -454,6 +502,9 @@ function loadQuickLinks() {
     quickLinks.forEach((link, index) => {
         const linkItem = document.createElement('div');
         linkItem.className = 'quick-link-item';
+        linkItem.draggable = true;
+        linkItem.dataset.index = index;
+        
         linkItem.innerHTML = `
             <a href="${link.url}" target="_blank">${link.name}</a>
             <div class="link-actions">
@@ -467,6 +518,7 @@ function loadQuickLinks() {
     
     addLinkEventListeners();
     updateScrollMask(elements.quickLinks);
+    initLinkDragAndDrop();
 }
 
 function addLinkEventListeners() {

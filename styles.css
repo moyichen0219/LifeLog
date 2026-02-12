@@ -427,6 +427,11 @@ body {
     transform: rotate(2deg);
 }
 
+.quick-link-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
 .todo-item.urgent {
     border-left: 4px solid var(--urgent-color);
 }
