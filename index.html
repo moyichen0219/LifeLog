@@ -133,6 +133,22 @@
         </div>
     </div>
     
+    <!-- 待办事项编辑模态框 -->
+    <div class="modal" id="todo-modal">
+        <div class="modal-content">
+            <h3>编辑任务</h3>
+            <input type="text" id="todo-edit-input" placeholder="任务内容">
+            <div class="priority-selector">
+                <select id="todo-edit-priority">
+                    <option value="normal">普通</option>
+                    <option value="urgent">紧急</option>
+                </select>
+            </div>
+            <button id="save-todo-btn" class="save-btn">保存</button>
+            <button id="cancel-todo-btn" class="cancel-btn">取消</button>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

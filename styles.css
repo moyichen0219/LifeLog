@@ -171,15 +171,18 @@ body {
     background: none;
     border: none;
     color: var(--text-color);
+    opacity: 0.7;
     cursor: pointer;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 3px;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
     transition: all 0.3s ease;
 }
 
 .quick-link-item button:hover {
     background: var(--border-color);
+    opacity: 1;
+    transform: translateY(-1px);
 }
 
 .add-link-btn {
@@ -392,15 +395,18 @@ body {
     background: none;
     border: none;
     color: var(--text-color);
+    opacity: 0.7;
     cursor: pointer;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 3px;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
     transition: all 0.3s ease;
 }
 
 .todo-item button:hover {
     background: var(--border-color);
+    opacity: 1;
+    transform: translateY(-1px);
 }
 
 /* 专注模式 */
@@ -910,7 +916,8 @@ body {
     font-size: 16px;
 }
 
-.modal-content input {
+.modal-content input,
+.modal-content select {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--border-color);
@@ -919,6 +926,10 @@ body {
     color: var(--text-color);
     font-size: 14px;
     margin-bottom: 10px;
+}
+
+.priority-selector {
+    margin-top: 10px;
 }
 
 .modal-content button {
@@ -931,21 +942,27 @@ body {
     margin-right: 10px;
 }
 
-#save-link-btn {
+#save-link-btn,
+.save-btn {
     background: var(--accent-color);
     color: white;
+    border-radius: 6px;
 }
 
-#save-link-btn:hover {
+#save-link-btn:hover,
+.save-btn:hover {
     background: #45a049;
 }
 
-#cancel-link-btn {
+#cancel-link-btn,
+.cancel-btn {
     background: #666;
     color: white;
+    border-radius: 6px;
 }
 
-#cancel-link-btn:hover {
+#cancel-link-btn:hover,
+.cancel-btn:hover {
     background: #555;
 }
 

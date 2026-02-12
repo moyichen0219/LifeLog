@@ -1,4 +1,4 @@
-// 全局变量 - 更新于 2026-02-12
+// 全局变量 - 更新于 2026-02-12 - 修复背景更换功能
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
 let quickLinks = JSON.parse(localStorage.getItem('quickLinks')) || [];
 let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
@@ -36,7 +36,12 @@ const elements = {
     settingsBtn: document.getElementById('settings-btn'),
     settingsPanel: document.getElementById('settings-panel'),
     closeSettingsBtn: document.getElementById('close-settings-btn'),
-    changeBgBtn: document.getElementById('change-bg-btn')
+    changeBgBtn: document.getElementById('change-bg-btn'),
+    todoModal: document.getElementById('todo-modal'),
+    todoEditInput: document.getElementById('todo-edit-input'),
+    todoEditPriority: document.getElementById('todo-edit-priority'),
+    saveTodoBtn: document.getElementById('save-todo-btn'),
+    cancelTodoBtn: document.getElementById('cancel-todo-btn')
 };
 
 // 初始化
@@ -330,12 +335,11 @@ function addTodoEventListeners() {
     
     editButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            const newText = prompt('编辑任务:', todos[index].text);
-            if (newText) {
-                todos[index].text = newText;
-                localStorage.setItem('todos', JSON.stringify(todos));
-                renderTodos();
-            }
+            // 打开编辑模态框
+            elements.todoEditInput.value = todos[index].text;
+            elements.todoEditPriority.value = todos[index].priority;
+            elements.saveTodoBtn.dataset.index = index;
+            elements.todoModal.classList.add('show');
         });
     });
     
@@ -482,6 +486,29 @@ function closeLinkModal() {
     delete elements.saveLinkBtn.dataset.index;
 }
 
+function saveTodoEdit() {
+    const text = elements.todoEditInput.value.trim();
+    const priority = elements.todoEditPriority.value;
+    const index = elements.saveTodoBtn.dataset.index;
+    
+    if (text) {
+        todos[index] = {
+            ...todos[index],
+            text: text,
+            priority: priority
+        };
+        localStorage.setItem('todos', JSON.stringify(todos));
+        renderTodos();
+        closeTodoModal();
+    }
+}
+
+function closeTodoModal() {
+    elements.todoModal.classList.remove('show');
+    elements.todoEditInput.value = '';
+    delete elements.saveTodoBtn.dataset.index;
+}
+
 // 专注模式（番茄钟）
 function updatePomodoroTimer() {
     const minutes = Math.floor(pomodoroTime / 60);
@@ -595,6 +622,10 @@ function initEventListeners() {
     elements.saveLinkBtn.addEventListener('click', saveLink);
     elements.cancelLinkBtn.addEventListener('click', closeLinkModal);
     
+    // 待办事项编辑模态框
+    elements.saveTodoBtn.addEventListener('click', saveTodoEdit);
+    elements.cancelTodoBtn.addEventListener('click', closeTodoModal);
+    
     // 专注模式
     elements.startPomodoro.addEventListener('click', startPomodoro);
     elements.pausePomodoro.addEventListener('click', pausePomodoro);
@@ -636,6 +667,9 @@ function initEventListeners() {
     window.addEventListener('click', (e) => {
         if (e.target === elements.linkModal) {
             closeLinkModal();
+        }
+        if (e.target === elements.todoModal) {
+            closeTodoModal();
         }
         if (e.target === elements.settingsPanel) {
             toggleSettings();
@@ -760,9 +794,11 @@ function renderChart(data, labels) {
     });
 }
 
-// 初始化应用
-init();
-loadBackground();
-
-// 初始化专注统计
-updateFocusStats();
+// 当DOM完全加载后初始化应用
+document.addEventListener('DOMContentLoaded', function() {
+    init();
+    loadBackground();
+    
+    // 初始化专注统计
+    updateFocusStats();
+});
