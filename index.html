@@ -70,6 +70,22 @@
                     <button id="pause-pomodoro">暂停</button>
                     <button id="reset-pomodoro">重置</button>
                 </div>
+                <div class="pomodoro-stats">
+                    <div class="segmented-control">
+                        <button class="segment-btn active" data-period="week">周</button>
+                        <button class="segment-btn" data-period="month">月</button>
+                    </div>
+                    <div class="focus-summary" id="focus-summary">本周累计专注：0 小时</div>
+                    <div class="achievement-icon" id="achievement-icon" style="display: none;">🏆</div>
+                    <div class="chart-container">
+                        <div class="chart-bars" id="chart-bars">
+                            <!-- 动态生成的柱状图 -->
+                        </div>
+                        <div class="chart-labels" id="chart-labels">
+                            <!-- 动态生成的标签 -->
+                        </div>
+                    </div>
+                </div>
             </section>
             
             <!-- 心情记录 -->

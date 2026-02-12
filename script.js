@@ -2,9 +2,11 @@
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
 let quickLinks = JSON.parse(localStorage.getItem('quickLinks')) || [];
 let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || [];
+let pomodoroFocusHistory = JSON.parse(localStorage.getItem('pomodoroFocusHistory')) || [];
 let pomodoroInterval = null;
 let pomodoroTime = 25 * 60; // 25分钟
 let isPomodoroRunning = false;
+let pomodoroStartTime = null;
 
 // DOM元素
 const elements = {
@@ -106,10 +108,10 @@ function addMoodRecord(mood) {
     
     moodHistory.push(record);
     
-    // 只保留最近30天的记录
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    moodHistory = moodHistory.filter(record => new Date(record.timestamp) >= thirtyDaysAgo);
+    // 只保留最近1天的记录
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    moodHistory = moodHistory.filter(record => new Date(record.timestamp) >= oneDayAgo);
     
     localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
     updateMoodStats();
@@ -490,6 +492,7 @@ function updatePomodoroTimer() {
 function startPomodoro() {
     if (!isPomodoroRunning) {
         isPomodoroRunning = true;
+        pomodoroStartTime = new Date();
         pomodoroInterval = setInterval(() => {
             pomodoroTime--;
             updatePomodoroTimer();
@@ -497,6 +500,10 @@ function startPomodoro() {
             if (pomodoroTime <= 0) {
                 clearInterval(pomodoroInterval);
                 isPomodoroRunning = false;
+                // 记录专注时长
+                const endTime = new Date();
+                const focusDuration = (endTime - pomodoroStartTime) / 1000 / 60; // 转换为分钟
+                saveFocusSession(focusDuration);
                 alert('时间到！休息一下吧');
                 // 可以添加声音提示
             }
@@ -509,6 +516,26 @@ function pausePomodoro() {
         clearInterval(pomodoroInterval);
         isPomodoroRunning = false;
     }
+}
+
+function saveFocusSession(duration) {
+    const session = {
+        date: new Date().toISOString().split('T')[0],
+        duration: duration,
+        timestamp: new Date().toISOString()
+    };
+    
+    pomodoroFocusHistory.push(session);
+    
+    // 只保留最近30天的记录
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    pomodoroFocusHistory = pomodoroFocusHistory.filter(session => new Date(session.timestamp) >= thirtyDaysAgo);
+    
+    localStorage.setItem('pomodoroFocusHistory', JSON.stringify(pomodoroFocusHistory));
+    
+    // 更新统计
+    updateFocusStats();
 }
 
 function resetPomodoro() {
@@ -592,6 +619,19 @@ function initEventListeners() {
     elements.closeSettingsBtn.addEventListener('click', toggleSettings);
     elements.changeBgBtn.addEventListener('click', changeBackground);
     
+    // 专注模式分段控件
+    const segmentBtns = document.querySelectorAll('.segment-btn');
+    segmentBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 移除所有按钮的active类
+            segmentBtns.forEach(b => b.classList.remove('active'));
+            // 添加当前按钮的active类
+            btn.classList.add('active');
+            // 更新统计
+            updateFocusStats(btn.dataset.period);
+        });
+    });
+    
     // 点击外部关闭模态框
     window.addEventListener('click', (e) => {
         if (e.target === elements.linkModal) {
@@ -603,6 +643,126 @@ function initEventListeners() {
     });
 }
 
+// 更新专注统计
+function updateFocusStats(period = 'week') {
+    const today = new Date();
+    let startDate, labels, dataPoints;
+    
+    if (period === 'week') {
+        // 生成过去7天的标签（Mon-Sun）
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 6);
+        labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        dataPoints = 7;
+    } else {
+        // 生成过去4周的标签
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - 27);
+        labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+        dataPoints = 4;
+    }
+    
+    // 计算每天/每周的专注时长
+    const focusData = [];
+    let totalFocus = 0;
+    
+    for (let i = 0; i < dataPoints; i++) {
+        const currentDate = new Date(startDate);
+        if (period === 'week') {
+            currentDate.setDate(startDate.getDate() + i);
+        } else {
+            currentDate.setDate(startDate.getDate() + i * 7);
+        }
+        
+        const dateStr = currentDate.toISOString().split('T')[0];
+        let dayFocus = 0;
+        
+        if (period === 'week') {
+            // 计算当天的专注时长
+            dayFocus = pomodoroFocusHistory
+                .filter(session => session.date === dateStr)
+                .reduce((sum, session) => sum + session.duration, 0);
+        } else {
+            // 计算当周的专注时长
+            const weekEndDate = new Date(currentDate);
+            weekEndDate.setDate(currentDate.getDate() + 6);
+            const weekEndStr = weekEndDate.toISOString().split('T')[0];
+            
+            dayFocus = pomodoroFocusHistory
+                .filter(session => {
+                    return session.date >= dateStr && session.date <= weekEndStr;
+                })
+                .reduce((sum, session) => sum + session.duration, 0);
+        }
+        
+        focusData.push(dayFocus);
+        totalFocus += dayFocus;
+    }
+    
+    // 更新总计显示
+    const totalHours = (totalFocus / 60).toFixed(1);
+    const summaryElement = document.getElementById('focus-summary');
+    if (summaryElement) {
+        summaryElement.textContent = period === 'week' ? 
+            `本周累计专注：${totalHours} 小时` : 
+            `本月累计专注：${totalHours} 小时`;
+    }
+    
+    // 检查成就
+    checkAchievement(period, totalHours);
+    
+    // 生成柱状图
+    renderChart(focusData, labels);
+}
+
+// 检查成就
+function checkAchievement(period, currentTotal) {
+    const achievementElement = document.getElementById('achievement-icon');
+    if (!achievementElement) return;
+    
+    // 简单的成就逻辑：当周/月专注时长超过10小时
+    if (parseFloat(currentTotal) > 10) {
+        achievementElement.style.display = 'block';
+    } else {
+        achievementElement.style.display = 'none';
+    }
+}
+
+// 生成柱状图
+function renderChart(data, labels) {
+    const barsContainer = document.getElementById('chart-bars');
+    const labelsContainer = document.getElementById('chart-labels');
+    
+    if (!barsContainer || !labelsContainer) return;
+    
+    // 清空容器
+    barsContainer.innerHTML = '';
+    labelsContainer.innerHTML = '';
+    
+    // 计算最大值，用于缩放柱状图
+    const maxValue = Math.max(...data, 1); // 确保至少有1的值
+    
+    // 生成柱状图
+    data.forEach((value, index) => {
+        const bar = document.createElement('div');
+        bar.className = 'chart-bar';
+        // 计算高度百分比
+        const height = (value / maxValue) * 100;
+        bar.style.height = `${height}%`;
+        // 延迟动画，使柱状图依次出现
+        bar.style.animationDelay = `${index * 0.1}s`;
+        barsContainer.appendChild(bar);
+        
+        const label = document.createElement('div');
+        label.className = 'chart-label';
+        label.textContent = labels[index];
+        labelsContainer.appendChild(label);
+    });
+}
+
 // 初始化应用
 init();
 loadBackground();
+
+// 初始化专注统计
+updateFocusStats();
