@@ -54,6 +54,7 @@ function init() {
     initWeather();
     updateMoodStats();
     initEventListeners();
+    initScrollMaskListeners();
 }
 
 // 便携搜索
@@ -199,6 +200,27 @@ function updateMoodIndicator(value, mood) {
 
 
 
+function updateScrollMask(container) {
+    if (!container) return;
+    
+    const hasOverflow = container.scrollHeight > container.clientHeight;
+    const isAtTop = container.scrollTop <= 5;
+    const isAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 5;
+    
+    container.classList.toggle('scroll-mask-top', hasOverflow && !isAtTop);
+    container.classList.toggle('scroll-mask-bottom', hasOverflow && !isAtBottom);
+}
+
+function initScrollMaskListeners() {
+    const containers = [elements.quickLinks, elements.todoItems];
+    
+    containers.forEach(container => {
+        if (container) {
+            container.addEventListener('scroll', () => updateScrollMask(container));
+        }
+    });
+}
+
 // 更新时钟
 function updateClock() {
     const now = new Date();
@@ -315,9 +337,9 @@ function renderTodos() {
         elements.todoItems.appendChild(todoItem);
     });
     
-    // 添加事件监听器
     addTodoEventListeners();
     initDragAndDrop();
+    updateScrollMask(elements.todoItems);
 }
 
 function addTodoEventListeners() {
@@ -430,8 +452,8 @@ function loadQuickLinks() {
         elements.quickLinks.appendChild(linkItem);
     });
     
-    // 添加事件监听器
     addLinkEventListeners();
+    updateScrollMask(elements.quickLinks);
 }
 
 function addLinkEventListeners() {

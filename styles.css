@@ -26,6 +26,31 @@
     box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
@@ -137,8 +162,33 @@ body {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-    flex: 1;
+    max-height: 300px;
     overflow-y: auto;
+    padding-right: 5px;
+    position: relative;
+}
+
+.quick-links.scroll-mask-top::before,
+.quick-links.scroll-mask-bottom::after {
+    content: '';
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 15px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.quick-links.scroll-mask-top::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--card-bg) 0%, transparent 100%);
+    margin-bottom: -15px;
+}
+
+.quick-links.scroll-mask-bottom::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--card-bg) 0%, transparent 100%);
+    margin-top: -15px;
 }
 
 .quick-link-item {
@@ -149,6 +199,8 @@ body {
     background: var(--bg-color);
     border-radius: 6px;
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .quick-link-item:hover {
@@ -160,6 +212,9 @@ body {
     color: var(--text-color);
     text-decoration: none;
     flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .quick-link-item .link-actions {
@@ -205,7 +260,7 @@ body {
 .grid-container {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 0.7fr 0.8fr;
     grid-template-rows: auto;
     gap: 20px;
     grid-template-areas:
@@ -300,7 +355,33 @@ body {
 
 .todo-items {
     flex: 1;
+    max-height: 300px;
     overflow-y: auto;
+    padding-right: 5px;
+    position: relative;
+}
+
+.todo-items.scroll-mask-top::before,
+.todo-items.scroll-mask-bottom::after {
+    content: '';
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 15px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.todo-items.scroll-mask-top::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--card-bg) 0%, transparent 100%);
+    margin-bottom: -15px;
+}
+
+.todo-items.scroll-mask-bottom::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--card-bg) 0%, transparent 100%);
+    margin-top: -15px;
 }
 
 .todo-list h3 {
@@ -343,11 +424,6 @@ body {
 
 .todo-controls button:hover {
     background: #45a049;
-}
-
-.todo-items {
-    max-height: 400px;
-    overflow-y: auto;
 }
 
 .todo-item {
