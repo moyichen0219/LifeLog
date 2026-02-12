@@ -16,7 +16,6 @@ const elements = {
     weatherLocation: document.getElementById('weather-location'),
     weatherTemp: document.getElementById('weather-temp'),
     weatherHumidity: document.getElementById('weather-humidity'),
-    weatherForecast: document.getElementById('weather-forecast'),
     todoInput: document.getElementById('todo-input'),
     todoPriority: document.getElementById('todo-priority'),
     addTodoBtn: document.getElementById('add-todo-btn'),
@@ -33,16 +32,84 @@ const elements = {
     pausePomodoro: document.getElementById('pause-pomodoro'),
     resetPomodoro: document.getElementById('reset-pomodoro'),
     quickSearchInput: document.getElementById('quick-search-input'),
-    settingsBtn: document.getElementById('settings-btn'),
-    settingsPanel: document.getElementById('settings-panel'),
-    closeSettingsBtn: document.getElementById('close-settings-btn'),
-    changeBgBtn: document.getElementById('change-bg-btn'),
     todoModal: document.getElementById('todo-modal'),
     todoEditInput: document.getElementById('todo-edit-input'),
     todoEditPriority: document.getElementById('todo-edit-priority'),
     saveTodoBtn: document.getElementById('save-todo-btn'),
     cancelTodoBtn: document.getElementById('cancel-todo-btn')
-};
+}; 
+
+// 天气获取函数
+async function initWeather() {
+    try {
+        // 1. 使用浏览器定位获取经纬度
+        const position = await new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    resolve,
+                    reject
+                );
+            } else {
+                reject(new Error('浏览器不支持地理定位'));
+            }
+        });
+        
+        const { latitude, longitude } = position.coords;
+        
+        // 2. 通过 fetch 请求和风天气接口
+        const apiKey = '0fd7b9c25bc64c72bcb8ac2b0104879a';
+        const url = `https://devapi.qweather.com/v7/weather/now?location=${longitude},${latitude}&key=${apiKey}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('天气接口请求失败');
+        }
+        
+        const data = await response.json();
+        
+        if (data.code === '200') {
+            // 3. 将结果更新到 DOM 元素中
+            elements.weatherLocation.textContent = data.location.name;
+            elements.weatherTemp.textContent = `${Math.round(parseFloat(data.now.temp))}°C`;
+            elements.weatherHumidity.textContent = `湿度: ${data.now.humidity}%`;
+            
+            // 更新天气图标
+            const weatherIcon = document.getElementById('weather-icon');
+            if (weatherIcon) {
+                const weatherText = data.now.text;
+                const iconMap = {
+                    '晴': '☀️', '多云': '⛅', '阴': '☁️', 
+                    '雨': '🌧️', '雪': '❄️', '雾': '🌫️'
+                };
+                weatherIcon.textContent = iconMap[weatherText] || '🌤️';
+            }
+        } else {
+            throw new Error('天气数据获取失败');
+        }
+        
+    } catch (error) {
+        console.error('获取天气失败:', error);
+        
+        // 4. 处理定位被拒绝时的错误提示
+        if (error.code === 1) {
+            // 用户拒绝定位
+            elements.weatherLocation.textContent = '定位被拒绝';
+        } else {
+            // 其他错误，显示默认北京天气
+            elements.weatherLocation.textContent = '北京';
+        }
+        
+        // 设置默认天气数据
+        elements.weatherTemp.textContent = '15°C';
+        elements.weatherHumidity.textContent = '湿度: 50%';
+        
+        // 更新默认天气图标
+        const weatherIcon = document.getElementById('weather-icon');
+        if (weatherIcon) {
+            weatherIcon.textContent = '☀️';
+        }
+    }
+}
 
 // 初始化
 function init() {
@@ -259,60 +326,6 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     elements.themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
-}
-
-// 天气功能
-async function initWeather() {
-    try {
-        const position = await getPosition();
-        const weather = await fetchWeather(position.coords.latitude, position.coords.longitude);
-        displayWeather(weather);
-    } catch (error) {
-        console.error('获取天气失败:', error);
-        elements.weatherLocation.textContent = '获取位置失败';
-    }
-}
-
-function getPosition() {
-    return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        } else {
-            reject(new Error('浏览器不支持地理定位'));
-        }
-    });
-}
-
-async function fetchWeather(lat, lon) {
-    // 使用OpenWeatherMap API，需要替换为真实的API密钥
-    const apiKey = 'YOUR_API_KEY';
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=zh_cn&appid=${apiKey}`;
-    
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error('API请求失败');
-    }
-    
-    return await response.json();
-}
-
-function displayWeather(weather) {
-    elements.weatherLocation.textContent = weather.name;
-    elements.weatherTemp.textContent = `${Math.round(weather.main.temp)}°C`;
-    elements.weatherHumidity.textContent = `湿度: ${weather.main.humidity}%`;
-    
-    // 模拟24小时预报
-    elements.weatherForecast.innerHTML = '';
-    for (let i = 0; i < 8; i++) {
-        const hour = new Date().getHours() + i;
-        const forecastItem = document.createElement('div');
-        forecastItem.className = 'forecast-item';
-        forecastItem.innerHTML = `
-            <span class="forecast-time">${hour}:00</span>
-            <span class="forecast-temp">${Math.round(weather.main.temp + (Math.random() * 4 - 2))}°C</span>
-        `;
-        elements.weatherForecast.appendChild(forecastItem);
-    }
 }
 
 // 待办清单
@@ -596,34 +609,6 @@ function resetPomodoro() {
 
 
 
-// 设置面板
-function toggleSettings() {
-    elements.settingsPanel.classList.toggle('show');
-}
-
-function changeBackground() {
-    // 使用Unsplash API获取随机图片
-    const imageUrl = `https://source.unsplash.com/random/1920x1080?nature,landscape`;
-    document.body.style.backgroundImage = `url('${imageUrl}')`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundPosition = 'center';
-    document.body.style.backgroundAttachment = 'fixed';
-    
-    // 保存到本地存储
-    localStorage.setItem('backgroundImage', imageUrl);
-}
-
-// 加载背景图片
-function loadBackground() {
-    const savedBackground = localStorage.getItem('backgroundImage');
-    if (savedBackground) {
-        document.body.style.backgroundImage = `url('${savedBackground}')`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center';
-        document.body.style.backgroundAttachment = 'fixed';
-    }
-}
-
 // 事件监听器
 function initEventListeners() {
     // 主题切换
@@ -667,11 +652,6 @@ function initEventListeners() {
         });
     });
     
-    // 设置面板
-    elements.settingsBtn.addEventListener('click', toggleSettings);
-    elements.closeSettingsBtn.addEventListener('click', toggleSettings);
-    elements.changeBgBtn.addEventListener('click', changeBackground);
-    
     // 专注模式分段控件
     const segmentBtns = document.querySelectorAll('.segment-btn');
     segmentBtns.forEach(btn => {
@@ -692,9 +672,6 @@ function initEventListeners() {
         }
         if (e.target === elements.todoModal) {
             closeTodoModal();
-        }
-        if (e.target === elements.settingsPanel) {
-            toggleSettings();
         }
     });
 }
@@ -819,7 +796,6 @@ function renderChart(data, labels) {
 // 当DOM完全加载后初始化应用
 document.addEventListener('DOMContentLoaded', function() {
     init();
-    loadBackground();
     
     // 初始化专注统计
     updateFocusStats();
