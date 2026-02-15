@@ -12,6 +12,8 @@ let pomodoroStartTime = null;
 const elements = {
     clock: document.getElementById('clock'),
     greeting: document.getElementById('greeting'),
+    greetingMain: document.getElementById('greeting-main'),
+    greetingSub: document.getElementById('greeting-sub'),
     themeToggle: document.getElementById('theme-toggle'),
     weatherLocation: document.getElementById('weather-location'),
     weatherTemp: document.getElementById('weather-temp'),
@@ -300,17 +302,163 @@ function updateClock() {
 function updateGreeting() {
     const now = new Date();
     const hour = now.getHours();
-    let greeting;
+    const day = now.getDay(); // 0 是周日
     
-    if (hour < 12) {
-        greeting = '早安，欢迎回来';
-    } else if (hour < 18) {
-        greeting = '午安，继续加油';
-    } else {
-        greeting = '晚安，注意休息';
+    // 触发动画效果的函数
+    function triggerAnimation(element) {
+        element.style.animation = 'none';
+        void element.offsetWidth; // 强制重排
+        element.style.animation = 'fadeIn 0.8s ease-in-out';
     }
     
-    elements.greeting.textContent = greeting;
+    // 1. 首先检查心情状态（2小时内）
+    if (moodHistory.length > 0) {
+        const lastMoodRecord = moodHistory[moodHistory.length - 1];
+        const lastMood = lastMoodRecord.mood;
+        const lastMoodTime = new Date(lastMoodRecord.timestamp);
+        const timeDiff = now - lastMoodTime;
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+        
+        // 如果最近2小时内心情是难过或疲惫，显示关怀问候
+        if (hoursDiff <= 2 && (lastMood === 'sad' || lastMood === 'tired')) {
+            const careGreetings = [
+                '我知道你最近有点累，记得照顾好自己，一切都会好起来的。❤️',
+                '累了就休息一下，慢慢来，我们不赶时间。🌟',
+                '难过的时候记得深呼吸，我在这里陪着你。🌙',
+                '疲惫是身体给你的信号，好好休息，充好电再出发。💤',
+                '不管发生什么，你都不是一个人在面对，一切都会过去的。🌈'
+            ];
+            const randomCareGreeting = careGreetings[Math.floor(Math.random() * careGreetings.length)];
+            
+            // 根据时间设置主标题
+            let mainTitle;
+            if (hour >= 5 && hour < 12) {
+                mainTitle = '早安';
+            } else if (hour < 18) {
+                mainTitle = '午安';
+            } else {
+                mainTitle = '晚安';
+            }
+            
+            // 更新内容并触发动画
+            elements.greetingMain.textContent = mainTitle;
+            elements.greetingSub.textContent = randomCareGreeting;
+            triggerAnimation(elements.greetingMain);
+            triggerAnimation(elements.greetingSub);
+            return;
+        }
+    }
+    
+    // 2. 定义更细致的时段和问候语库
+    const greetings = {
+        // 主标题
+        mainTitles: {
+            earlyMorning: '早安',
+            morning: '上午好',
+            noon: '中午好',
+            afternoon: '下午好',
+            evening: '晚上好',
+            night: '晚安'
+        },
+        // 副标题（寄语）
+        subtitles: {
+            // 清晨 (5-9点)
+            earlyMorning: [
+                '清晨的阳光最珍贵，开启元气满满的一天吧！☀️',
+                '世界正在苏醒，你也一样充满活力。🌱',
+                '记得喝杯温水，为身体注入能量。💧',
+                '早起的鸟儿有虫吃，开始新的冒险！🐦',
+                '晨光正好，心情也跟着明朗起来了。🌅'
+            ],
+            // 上午 (9-11点)
+            morning: [
+                '现在是效率最高的时间段，专注当下。💪',
+                '让我们一起专注于重要的事情。🎯',
+                '工作再忙也要记得适当休息哦。☕',
+                '每一个小目标的完成都是进步。📈',
+                '专注是一种力量，现在正是发挥的时候。⚡'
+            ],
+            // 中午 (11-14点)
+            noon: [
+                '别忘了午休，适当的放松能让下午事半功倍。☕',
+                '午餐时间到，好好犒劳一下自己的胃。🍽️',
+                '短暂的休息是为了更好地出发。😴',
+                '记得吃饭哦，身体是革命的本钱。🥗',
+                '让大脑和身体都得到放松。🌿'
+            ],
+            // 下午 (14-18点)
+            afternoon: [
+                '午后的时光，继续为你的目标努力。🚀',
+                '保持专注，距离目标又近了一步。🌟',
+                '让我们充满动力地前进。💨',
+                '每一份努力都不会被辜负。💎',
+                '午后的阳光，和你的努力一样耀眼。☀️'
+            ],
+            // 傍晚 (18-22点)
+            evening: [
+                '辛苦了一天，享受属于自己的时刻。🌙',
+                '放下工作，好好放松一下吧。🎮',
+                '今天的你也很棒，值得奖励自己。🎉',
+                '适合做一些让自己开心的事。🎨',
+                '辛苦了，今晚只有温柔和轻松。✨'
+            ],
+            // 深夜 (22-5点)
+            night: [
+                '星光伴你入梦，早点休息吧。💤',
+                '放下手机，好好睡一觉。🌌',
+                '明天又是新的开始，好梦。😴',
+                '让身体和心灵都得到充分的休息。🌙',
+                '愿你在梦中找到属于自己的宁静。🌟'
+            ],
+            // 周末专属
+            weekend: [
+                '放慢步调去生活，享受美好时光。🌸',
+                '今天适合去见想见的人，做想做的事。🎉',
+                '休息也是一种进步，好好放松自己。🌿',
+                '给自己充充电，下周再战！⚡',
+                '忘记工作的烦恼，尽情享受。🎈'
+            ]
+        }
+    };
+    
+    // 随机获取问候语的函数
+    const getRandomGreeting = (greetingArray) => {
+        return greetingArray[Math.floor(Math.random() * greetingArray.length)];
+    };
+    
+    let mainTitle, subtitle;
+    
+    // 3. 检查是否是周末
+    if (day === 0 || day === 6) {
+        // 周末使用周末专属副标题
+        mainTitle = '周末愉快';
+        subtitle = getRandomGreeting(greetings.subtitles.weekend);
+    } else {
+        // 工作日根据时间选择问候语
+        let timeSlot;
+        if (hour >= 5 && hour < 9) {
+            timeSlot = 'earlyMorning';
+        } else if (hour >= 9 && hour < 11) {
+            timeSlot = 'morning';
+        } else if (hour >= 11 && hour < 14) {
+            timeSlot = 'noon';
+        } else if (hour >= 14 && hour < 18) {
+            timeSlot = 'afternoon';
+        } else if (hour >= 18 && hour < 22) {
+            timeSlot = 'evening';
+        } else {
+            timeSlot = 'night';
+        }
+        
+        mainTitle = greetings.mainTitles[timeSlot];
+        subtitle = getRandomGreeting(greetings.subtitles[timeSlot]);
+    }
+    
+    // 4. 更新内容并触发动画
+    elements.greetingMain.textContent = mainTitle;
+    elements.greetingSub.textContent = subtitle;
+    triggerAnimation(elements.greetingMain);
+    triggerAnimation(elements.greetingSub);
 }
 
 // 主题切换
