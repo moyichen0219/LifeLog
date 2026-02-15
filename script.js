@@ -59,7 +59,7 @@ async function initWeather() {
         const { latitude, longitude } = position.coords;
         
         // 2. 通过 fetch 请求和风天气接口
-        const apiKey = '0fd7b9c25bc64c72bcb8ac2b0104879a';
+        const apiKey = '请填入apikey';
         const url = `https://devapi.qweather.com/v7/weather/now?location=${longitude},${latitude}&key=${apiKey}`;
         
         const response = await fetch(url);
