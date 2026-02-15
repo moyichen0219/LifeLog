@@ -49,8 +49,8 @@
 |------|------|
 | HTML5 | 页面结构 |
 | CSS3 | 页面样式和响应式设计 |
-| JavaScript (ES6+) | 交互逻辑和功能实现 |
-| LocalStorage | 本地数据存储 |
+| JavaScript (ES6+) | 交互逻辑、定时器、天气 API 调用等核心功能实现 |
+| LocalStorage | 本地数据存储，实现本地数据持久化 |
 | 浏览器 Geolocation API | 获取用户地理位置 |
 | 和风天气 API | 获取实时天气数据 |
 

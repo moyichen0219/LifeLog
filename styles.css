@@ -976,6 +976,7 @@ body {
         grid-template-areas:
             "weather todo"
             "pomodoro todo"
+            "mood mood"
             "search search";
     }
 }
@@ -996,6 +997,7 @@ body {
             "weather"
             "todo"
             "pomodoro"
+            "mood"
             "search";
     }
     
